@@ -5,8 +5,9 @@ import { Router } from 'react-router'
 
 export default class Root extends Component {
   render() {
+    const { store, history } = this.props
     return (
-      <Provider>
+      <Provider store={store}>
         <Router history={history} routes={routes} />
       </Provider>
     )
