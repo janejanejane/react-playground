@@ -5,6 +5,10 @@ export default class ForgotPassword extends React.Component {
     return (
       <div>
         <h1>ForgotPassword</h1>
+        <form>
+          <input type="text" />
+          <button>Ok</button>
+        </form>
       </div>
     );
   }
