@@ -5,6 +5,7 @@ export default class Signup extends React.Component {
     return (
       <div>
         <h1>Signup</h1>
+        Username: <input type="text" />
       </div>
     );
   }
