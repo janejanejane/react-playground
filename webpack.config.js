@@ -15,6 +15,10 @@ module.exports = {
         query: {
           presets: [ 'react', 'es2015', 'stage-0' ]
         }
+      },
+      {
+        test: /\.json/,
+        loaders: [ 'json-loader' ]
       }
     ]
   },
@@ -26,5 +30,9 @@ module.exports = {
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false })
-  ]
+  ],
+  resolve: {
+    extensions: [ '', '.js' ],
+    root: path.join( __dirname, 'src/js' )
+  }
 };

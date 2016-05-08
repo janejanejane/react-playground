@@ -1,18 +1,40 @@
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import Counter from '../components/Counter'
-import * as CounterActions from '../actions'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { getSession } from 'reducers/authentication';
+import Header from 'components/layout/Header';
+import Footer from 'components/layout/Footer';
 
-// TODO: add component
+export class App extends Component {
+  componentDidMount() {
+    this.props.getSession();
+  }
 
-function mapStateToProps(state) {
-  return {
-    counter: state.counter
+  render() {
+    const { isAuthenticated } = this.props
+
+    return (
+      <div>
+        <Header />
+        {this.props.children}
+        <Footer />
+      </div>
+    )
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(CounterActions, dispatch)
+function mapStateToProps( state ) {
+  return {
+    isAuthenticated: state.authentication.isAuthenticated
+  }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Counter)
+function mapDispatchToProps( dispatch ) {
+  return {
+    getSession
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)( App )

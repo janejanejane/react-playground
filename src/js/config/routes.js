@@ -1,14 +1,15 @@
-import React from 'react'
-import { Route } from 'react-router'
-import App from '../containers/App'
-import Signup from '../containers/Signup'
-import ForgotPassword from '../containers/ForgotPassword'
+import React from 'react';
+import { IndexRoute, Route } from 'react-router';
+import App from 'containers/App';
+import LoginPage from 'containers/LoginPage';
+import SignupPage from 'containers/SignupPage';
+import ForgotPasswordPage from 'containers/ForgotPasswordPage';
 
-export default (
+export default ( onLogout ) => (
   <Route path="/" component={App}>
-    <Route path="/signup"
-           component={Signup} />
-    <Route path="/forgotpassword"
-           component={ForgotPassword} />
+    <IndexRoute component={LoginPage}/>
+    <Route path="signup" component={SignupPage} />
+    <Route path="forgotpassword" component={ForgotPasswordPage} />
+    <Route path="logout" onEnter={onLogout} />
   </Route>
 )
