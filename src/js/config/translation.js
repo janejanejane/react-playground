@@ -17,7 +17,7 @@ const registerLocales = ( store ) => {
 
   store.subscribe( () => {
     let previousLocale = currentLocale;
-    currentLocale = store.getState().locale.currentLocale;
+    currentLocale = ( store.getState().locale ) ? store.getState().locale.currentLocale : null;
     if ( previousLocale !== currentLocale ) {
       localStorage.setItem( 'locale', currentLocale );
       counterpart.setLocale( currentLocale );
