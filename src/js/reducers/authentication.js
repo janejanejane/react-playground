@@ -74,7 +74,11 @@ export default function reducer( state = initialState, action ) {
   }
 }
 
-export function displayAuthError( username, password ) {
+export function displayAuthError( message ) {
+  return { type: ERROR_MESSAGE, message }
+}
+
+export function login( username, password ) {
   return {
     types: [ LOGIN, LOGIN_SUCCESS, LOGIN_FAIL ],
     promise: ( client ) => client.post( '/api/session', { username, password } ),
