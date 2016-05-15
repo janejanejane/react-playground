@@ -1,13 +1,20 @@
-import React from "react";
+import { connect } from 'react-redux';
+import { login } from 'reducers/registration';
+import LoginForm from 'components/SignupForm';
 
-export default class Signup extends React.Component {
-  render() {
-    return (
-      <div>
-        <h1>Signup</h1>
-        Username: <input type="text" />
-        Password: <input type="text" />
-      </div>
-    );
+function mapStateToProps( state ) {
+  return {
+    errorMessage: state.registration.errorMessage
   }
 }
+
+function mapDispatchToProps( dispatch ) {
+  return {
+    register
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)( SignupForm );
