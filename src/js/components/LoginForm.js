@@ -6,9 +6,11 @@ export default class LoginForm extends Component {
     return (
       <div>
         <form onSubmit={ ( formData ) => this.handleSubmit( formData ) } >
+          <label>Username:</label>
           <input
             type="email"
             id="username" />
+          <label>Password:</label>
           <input
             type="password"
             id="password" />
