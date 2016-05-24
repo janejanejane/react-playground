@@ -9,11 +9,13 @@ export default class LoginForm extends Component {
           <label>Username:</label>
           <input
             type="email"
-            id="username" />
+            id="username"
+            onChange={handleChange} />
           <label>Password:</label>
           <input
             type="password"
-            id="password" />
+            id="password"
+            onChange={handleChange} />
           <div>
             <button type="submit">Sign in</button>
           </div>
@@ -26,5 +28,9 @@ export default class LoginForm extends Component {
     const { username, password } = this.props;
     const { login } = this.props;
     login( username, password );
+  }
+
+  handleChange( e ) {
+    console.log( 'handleChange' )
   }
 }
