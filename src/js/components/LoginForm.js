@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 
 export default class LoginForm extends Component {
+  constructor() {
+    super()
+    this.state = {
+      username: '',
+      password: ''
+    }
+  }
+
   render() {
     const { errorMessage } = this.props;
     return (
@@ -10,11 +18,13 @@ export default class LoginForm extends Component {
           <input
             type="email"
             id="username"
+            name="username"
             onChange={handleChange} />
           <label>Password:</label>
           <input
             type="password"
             id="password"
+            name="password"
             onChange={handleChange} />
           <div>
             <button type="submit">Sign in</button>
@@ -32,5 +42,6 @@ export default class LoginForm extends Component {
 
   handleChange( e ) {
     console.log( 'handleChange' )
+    this.setState({ e.target.name: e.target.value })
   }
 }
