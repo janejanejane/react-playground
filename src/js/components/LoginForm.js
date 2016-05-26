@@ -19,12 +19,14 @@ export default class LoginForm extends Component {
             type="email"
             id="username"
             name="username"
+            value={this.state.username}
             onChange={handleChange} />
           <label>Password:</label>
           <input
             type="password"
             id="password"
             name="password"
+            value={this.state.password}
             onChange={handleChange} />
           <div>
             <button type="submit">Sign in</button>
