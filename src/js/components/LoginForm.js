@@ -13,6 +13,7 @@ export default class LoginForm extends Component {
     const { errorMessage } = this.props;
     return (
       <div>
+        Login
         <form onSubmit={ ( formData ) => this.handleSubmit( formData ) } >
           <label>Username:</label>
           <input
