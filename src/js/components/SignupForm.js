@@ -11,4 +11,8 @@ export default class Signup extends React.Component {
       </div>
     );
   }
+
+  handleSubmit( e ) {
+    console.log( e );
+  }
 }
