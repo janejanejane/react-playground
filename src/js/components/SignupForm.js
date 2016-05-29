@@ -3,12 +3,12 @@ import React from "react";
 export default class Signup extends React.Component {
   render() {
     return (
-      <div>
+      <form onSubmit={handleSubmit}>
         <h1>Signup</h1>
         Username: <input type="text" />
         Password: <input type="text" />
         <button>Submit</button>
-      </div>
+      </form>
     );
   }
 
