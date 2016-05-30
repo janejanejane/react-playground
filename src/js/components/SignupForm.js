@@ -5,7 +5,7 @@ export default class Signup extends React.Component {
     return (
       <form onSubmit={handleSubmit}>
         <h1>Signup</h1>
-        Username: <input type="text" />
+        Username: <input type="text" onChange={handleChange}/>
         Password: <input type="text" />
         <button>Submit</button>
       </form>
@@ -13,6 +13,10 @@ export default class Signup extends React.Component {
   }
 
   handleSubmit( e ) {
+    console.log( e );
+  }
+
+  handleChange( e ) {
     console.log( e );
   }
 }
