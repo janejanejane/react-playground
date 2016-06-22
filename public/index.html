@@ -191,6 +191,8 @@
 	        currCircle.attr( 'cx', x( i + 0.50 ) );
 	        currCircle.attr( 'cy', y( currDataset[ i ] ) );
 	      }
+
+				outsideEvent();
 	    })
 	    .on( 'mouseout', function( d, i ) {
 	      prevCircle.attr( 'cx', x( ( prevDataset.length - 1 ) + 0.50 ) );
@@ -198,9 +200,15 @@
 	      currCircle.attr( 'cx', x( ( currDataset.length - 1 ) + 0.50 ) );
 	      currCircle.attr( 'cy', y( lastCurrItem ) );
 	    });
+
+		function outsideEvent() {
+			$('#outside').text( 'hello' );
+		}
 	</script>
 
 
+	<div id="outside"></div>
 
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.js"></script>
 	</body>
 </html>
