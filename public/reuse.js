@@ -32,7 +32,7 @@
   var lineChart = function( container ) {
 
     // register events to dispatch
-    var dispatch = d3.dispatch( self, 'mouseover.outside' );
+    var dispatch = d3.dispatch( 'mouseoverOutside' );
 
     function self( selection ) {
       selection.each( function( d, i ) {
@@ -194,7 +194,7 @@
         .attr( 'fill', 'transparent' )
         .attr( 'class', 'hover-rect' );
 
-      bars.on( 'mouseover', mouseOver );
+      bars.on( 'mouseover', mouseOver( wrapper ) );
     }
 
     function drawCircles() {
@@ -249,9 +249,13 @@
           .attr( 'class', props.className + props.dataset );
     }
 
-    function mouseOver( ) {
+    function mouseOver( container ) {
+      console.log( 'here?', container );
+
       return function( d, i ) {
         console.log( 'mouseover!!!' );
+
+        dispatch.mouseoverOutside( d, i );
       }
     }
 
@@ -273,6 +277,6 @@ d3.select(  '#chartinger'  )
   .datum( data )
   .call( chart );
 
-chart.on( 'mouseover.outside', function( d, i ) {
-  console.log( 'i should have this!!!' );
+chart.on( 'mouseoverOutside', function( d, i ) {
+  console.log( 'i should have this!!!', d, i );
 });
