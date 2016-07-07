@@ -31,6 +31,9 @@
 
   var lineChart = function( container ) {
 
+    // register events to dispatch
+    var dispatch = d3.dispatch( self, 'mouseover.outside' );
+
     function self( selection ) {
       selection.each( function( d, i ) {
         graphXRange = width - margin.left - margin.right;
@@ -149,7 +152,9 @@
     function drawBars() {
 
       // add a hover area, a rect tag
-      var bars = svg.select( '.hover' );
+      var bars = svg.select( '.hover' )
+        .selectAll( '.hover-rect' )
+          .data( xBottom );
       var bgBars = svg.select( '.columns' );
       var wrapper = svg.select( '.wrapper' );
 
@@ -179,9 +184,7 @@
 
       // add the bars that will handle the hover event of the graph,
       // these bars are transparent
-      bars.selectAll( '.hover-rect' )
-        .data( xBottom )
-      .enter().append( 'rect' )
+      bars.enter().append( 'rect' )
         .attr( 'x', function( d, i ) {
           return i * ( graphXRange / xBottom.length );
         })
@@ -191,6 +194,7 @@
         .attr( 'fill', 'transparent' )
         .attr( 'class', 'hover-rect' );
 
+      bars.on( 'mouseover', mouseOver );
     }
 
     function drawCircles() {
@@ -245,7 +249,14 @@
           .attr( 'class', props.className + props.dataset );
     }
 
-    return self;
+    function mouseOver( ) {
+      return function( d, i ) {
+        console.log( 'mouseover!!!' );
+      }
+    }
+
+    // return self;
+    return d3.rebind( self, dispatch, 'on' );
   };
 
   global.lineChart = lineChart;
@@ -261,3 +272,7 @@ var data = [
 d3.select(  '#chartinger'  )
   .datum( data )
   .call( chart );
+
+chart.on( 'mouseover.outside', function( d, i ) {
+  console.log( 'i should have this!!!' );
+});
