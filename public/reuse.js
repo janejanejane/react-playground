@@ -53,12 +53,12 @@
     }
 
     function buildSVG( container ) {
-      if ( !svg ) {
+      // if ( !svg ) {
         svg = d3.select( container )
           .append( 'svg' );
 
           buildGroups();
-      }
+      // }
 
       svg.transition()
         .attr( 'width', width )
@@ -279,4 +279,19 @@ d3.select(  '#chartinger'  )
 
 chart.on( 'mouseoverOutside', function( d, i ) {
   console.log( 'i should have this!!!', d, i );
+});
+
+
+var chart2 = window.lineChart();
+var data2 = [
+  [ 'data1', 12, 87, 56, 78, 43, 23, -45 ],
+  [ 'data2', 89, 32, 46, 76, 88 ]
+];
+
+d3.select(  '#chartinger2'  )
+  .datum( data2 )
+  .call( chart2 );
+
+chart2.on( 'mouseoverOutside', function( d, i ) {
+  console.log( 'i should have this 2!!!', d, i );
 });
