@@ -4,29 +4,17 @@
   var axisColor = 'gray',
       circleRadius = 3,
       columnClassColor = 'column-color',
-      data,
-      graphXRange,
-      graphYRange,
       height = 200,
       initialPosition = 48,
       innerAxisLength = 35,
-      line = d3.svg.line().interpolate( 'linear' ),
       margin = {
         bottom: 20,
         left: 45,
         right: 15,
         top: 20
       },
-      svg,
       tickInterval = 3,
-      width = 400,
-      wrapper,
-      x = d3.scale.linear(),
-      xAxis = d3.svg.axis(),
-      xAxisSpace = 0.5,
-      xBottom = [ '1', '2', '3', '4', '5', '6', '7' ],
-      y = d3.scale.linear(),
-      yAxis = d3.svg.axis();
+      width = 400;
 
 
   var charter = {
@@ -38,11 +26,13 @@
 
     var lineInternals = Object.create( internals );
 
+    var that = this;
+
     function self( selection ) {
       selection.each( function( d, i ) {
-        graphXRange = width - margin.left - margin.right;
-        graphYRange = height - margin.top - margin.bottom;
-        data = d;
+        that.graphXRange = width - margin.left - margin.right;
+        that.graphYRange = height - margin.top - margin.bottom;
+        that.data = d;
 
         lineInternals.buildSVG( this );
         lineInternals.buildScales();
@@ -65,15 +55,26 @@
 var internals = {
     dispatch: null,
 
+    data: null,
+    graphXRange: null,
+    graphYRange: null,
+    line: d3.svg.line().interpolate( 'linear' ),
+    svg: null,
+    x: d3.scale.linear(),
+    xAxis: d3.svg.axis(),
+    xBottom: [ '1', '2', '3', '4', '5', '6', '7' ],
+    y: d3.scale.linear(),
+    yAxis: d3.svg.axis(),
+
     buildSVG: function( container ) {
       // if ( !svg ) {
-        svg = d3.select( container )
+        this.svg = d3.select( container )
           .append( 'svg' );
 
           this.buildGroups();
       // }
 
-      svg.transition()
+      this.svg.transition()
         .attr( 'width', width )
         .attr( 'height',  height );
 
@@ -81,57 +82,58 @@ var internals = {
 
     buildGroups: function() {
 
-          var wrapper = svg.append( 'g' )
-            .attr( 'class', 'wrapper' )
-            .attr( 'transform', 'translate(' + margin.left + ', 0 )' );
+        var wrapper = this.svg.append( 'g' )
+          .attr( 'class', 'wrapper' )
+          .attr( 'transform', 'translate(' + margin.left + ', 0 )' );
 
-          // x-axis group element
-          wrapper.append( 'g' ).attr( 'class', 'x axis' );
+        // x-axis group element
+        wrapper.append( 'g' ).attr( 'class', 'x axis' );
 
-          // y-axis group element
-          wrapper.append( 'g' ).attr( 'class', 'y axis' );
+        // y-axis group element
+        wrapper.append( 'g' ).attr( 'class', 'y axis' );
 
-          // background rects to enable column colors
-          wrapper.append( 'g' ).attr( 'class', 'columns');
+        // background rects to enable column colors
+        wrapper.append( 'g' ).attr( 'class', 'columns');
 
-          // the actual data line will be placed in this group
-          wrapper.append( 'g' ).attr( 'class', 'lines' );
+        // the actual data line will be placed in this group
+        wrapper.append( 'g' ).attr( 'class', 'lines' );
 
-          // all the circles will be here
-          wrapper.append( 'g' ).attr( 'class', 'circles' );
+        // all the circles will be here
+        wrapper.append( 'g' ).attr( 'class', 'circles' );
 
-          // this contains the rect elements that will respond to hover events
-          wrapper.append( 'g' ).attr( 'class', 'hover' );
+        // this contains the rect elements that will respond to hover events
+        wrapper.append( 'g' ).attr( 'class', 'hover' );
     },
 
     buildScales: function() {
         // set the domain and range for the x-axis
         this.setScale({
-          axis: x,
-          domain: [ 0 , xBottom.length ],
-          range: [ 0, graphXRange ]
+          axis: this.x,
+          domain: [ 0 , this.xBottom.length ],
+          range: [ 0, this.graphXRange ]
         });
 
         // set the domain and range for the y-axis
         this.setScale({
-          axis: y,
-          domain: d3.extent( d3.merge( data ).filter( function( i ) { return typeof i === 'number'; } ) ),
-          range: [ graphYRange, 0 ]
+          axis: this.y,
+          domain: d3.extent( d3.merge( this.data ).filter( function( i ) { return typeof i === 'number'; } ) ),
+          range: [ this.graphYRange, 0 ]
         });
     },
 
     buildAxis: function() {
+      var that = this;
 
-      xAxis.scale( x )
-        .tickValues( xBottom.map( function( d, i ) {
+      this.xAxis.scale( this.x )
+        .tickValues( this.xBottom.map( function( d, i ) {
           return i;
         }))
         .tickFormat( function( d, i ) {
-          return xBottom[ d ];
+          return that.xBottom[ d ];
         })
         .orient( 'bottom' );
 
-      yAxis.scale( y )
+      yAxis.scale( this.y )
         // .tickValues( d3.extent( data[ 0 ].slice( 1 ) ) )
         .tickFormat( function( d, i ) {
           return d;
@@ -141,46 +143,50 @@ var internals = {
     },
 
     buildLine: function() {
+      var that = this;
+
       // define the line
-      line.x( function( d, i ) {
-          return x( i + xAxisSpace );
+      this.line.x( function( d, i ) {
+          return that.x( i + xAxisSpace );
         })
         .y( function( d, i ) {
-          return y( d );
+          return that.y( d );
         });
     },
 
     drawAxis: function() {
-      var wrapper = svg.select( '.wrapper' )
+      var wrapper = this.svg.select( '.wrapper' )
       wrapper.select( '.x.axis' )
         .attr( 'transform', 'translate( 0, ' + graphYRange + ')' )
         .style( 'fill', axisColor )
-        .call( xAxis );
+        .call( this.xAxis );
 
       wrapper.select( '.y.axis' )
         .style( 'fill', axisColor )
-        .call( yAxis );
+        .call( this.yAxis );
     },
 
     drawBars: function() {
 
       // add a hover area, a rect tag
-      var bars = svg.select( '.hover' )
+      var bars = this.svg.select( '.hover' )
         .selectAll( '.hover-rect' )
-          .data( xBottom );
-      var bgBars = svg.select( '.columns' );
-      var wrapper = svg.select( '.wrapper' );
+          .data( this.xBottom );
+      var bgBars = this.svg.select( '.columns' );
+      var wrapper = this.svg.select( '.wrapper' );
+
+      var that = this;
 
       // draw the graph column backgrounds
       bgBars.selectAll( '.graph-columns' )
-        .data( xBottom )
+        .data( this.xBottom )
       .enter().append( 'rect' )
         .attr( 'x', function( d, i ) {
-          return i * ( graphXRange / xBottom.length );
+          return i * ( that.graphXRange / that.xBottom.length );
         })
         .attr( 'y', 0 )
-        .attr( 'width', ( graphXRange / xBottom.length - 1 ) )
-        .attr( 'height', graphYRange )
+        .attr( 'width', ( that.graphXRange / that.xBottom.length - 1 ) )
+        .attr( 'height', that.graphYRange )
         .attr( 'fill', function( d, i ) {
 
           // no column color needed
@@ -199,26 +205,26 @@ var internals = {
       // these bars are transparent
       bars.enter().append( 'rect' )
         .attr( 'x', function( d, i ) {
-          return i * ( graphXRange / xBottom.length );
+          return i * ( that.graphXRange / that.xBottom.length );
         })
         .attr( 'y', 0 )
-        .attr( 'width', ( graphXRange / xBottom.length - 1 ) )
-        .attr( 'height', graphYRange + 20 )
+        .attr( 'width', ( that.graphXRange / that.xBottom.length - 1 ) )
+        .attr( 'height', that.graphYRange + 20 )
         .attr( 'fill', 'transparent' )
         .attr( 'class', 'hover-rect' );
 
-      bars.on( 'mouseover', this.mouseOver( wrapper ).bind( this ) );
+      bars.on( 'mouseover', this.mouseOver( wrapper ) );
     },
 
     drawCircles: function() {
       // include the lines and circle now
-      for ( var val in data ) {
-        var values = data[ val ].slice( 1 );
+      for ( var val in this.data ) {
+        var values = this.data[ val ].slice( 1 );
     	  initialPosition = ( values.length < initialPosition ) ? values.length : initialPosition;
       }
 
-      for ( var val in data ) {
-        var record = data[ val ];
+      for ( var val in this.data ) {
+        var record = this.data[ val ];
         this.setCircle( {
           data: record.slice( 1 ),
           dataset: val,
@@ -229,8 +235,8 @@ var internals = {
     },
 
     drawLines: function() {
-      for ( var val in data ) {
-        var record = data[ val ];
+      for ( var val in this.data ) {
+        var record = this.data[ val ];
         this.setLine( {
           data: record.slice( 1 ),
           className: record[ 0 ]
@@ -247,7 +253,7 @@ var internals = {
       svg.select( '.lines' )
         .append( 'path' )
           .datum( props.data )
-          .attr( 'd', line( props.data ) )
+          .attr( 'd', this.line( props.data ) )
           .attr( 'class', props.className )
           .style( 'fill', 'transparent' );
     },
@@ -256,8 +262,8 @@ var internals = {
       svg.select( '.circles' )
         .append( 'g' )
           .append( 'circle' )
-          .attr( 'cx', x( props.initialPosition + xAxisSpace ) )
-          .attr( 'cy', y( props.data[ props.initialPosition ] + 10 ) )
+          .attr( 'cx', this.x( props.initialPosition + xAxisSpace ) )
+          .attr( 'cy', this.y( props.data[ props.initialPosition ] + 10 ) )
           .attr( 'r', circleRadius )
           .attr( 'class', props.className + props.dataset );
     },
