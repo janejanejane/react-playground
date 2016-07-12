@@ -14,7 +14,8 @@
         top: 20
       },
       tickInterval = 3,
-      width = 400;
+      width = 400,
+      xAxisSpace = 0.5;
 
 
   var charter = {
@@ -30,9 +31,9 @@
 
     function self( selection ) {
       selection.each( function( d, i ) {
-        that.graphXRange = width - margin.left - margin.right;
-        that.graphYRange = height - margin.top - margin.bottom;
-        that.data = d;
+        lineInternals.graphXRange = width - margin.left - margin.right;
+        lineInternals.graphYRange = height - margin.top - margin.bottom;
+        lineInternals.data = d;
 
         lineInternals.buildSVG( this );
         lineInternals.buildScales();
@@ -133,7 +134,7 @@ var internals = {
         })
         .orient( 'bottom' );
 
-      yAxis.scale( this.y )
+      this.yAxis.scale( this.y )
         // .tickValues( d3.extent( data[ 0 ].slice( 1 ) ) )
         .tickFormat( function( d, i ) {
           return d;
@@ -157,7 +158,7 @@ var internals = {
     drawAxis: function() {
       var wrapper = this.svg.select( '.wrapper' )
       wrapper.select( '.x.axis' )
-        .attr( 'transform', 'translate( 0, ' + graphYRange + ')' )
+        .attr( 'transform', 'translate( 0, ' + this.graphYRange + ')' )
         .style( 'fill', axisColor )
         .call( this.xAxis );
 
@@ -250,7 +251,7 @@ var internals = {
     },
 
     setLine: function( props ) {
-      svg.select( '.lines' )
+      this.svg.select( '.lines' )
         .append( 'path' )
           .datum( props.data )
           .attr( 'd', this.line( props.data ) )
@@ -259,7 +260,7 @@ var internals = {
     },
 
     setCircle: function( props ) {
-      svg.select( '.circles' )
+      this.svg.select( '.circles' )
         .append( 'g' )
           .append( 'circle' )
           .attr( 'cx', this.x( props.initialPosition + xAxisSpace ) )
@@ -270,11 +271,12 @@ var internals = {
 
     mouseOver: function( container ) {
       console.log( 'here?', container );
+      var that = this;
 
       return function( d, i ) {
         console.log( 'mouseover!!!' );
 
-        this.dispatch.mouseoverOutside( d, i );
+        that.dispatch.mouseoverOutside( d, i );
       }
     }
 }
