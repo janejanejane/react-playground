@@ -120,6 +120,8 @@ var internals = {
           domain: d3.extent( d3.merge( this.data ).filter( function( i ) { return typeof i === 'number'; } ) ),
           range: [ this.graphYRange, 0 ]
         });
+
+        console.log( 'this.data:', this.data );
     },
 
     buildAxis: function() {
@@ -135,9 +137,9 @@ var internals = {
         .orient( 'bottom' );
 
       this.yAxis.scale( this.y )
-        // .tickValues( d3.extent( data[ 0 ].slice( 1 ) ) )
+        .tickValues( this.adjustYAxisValues( this.y.domain() ) )
         .tickFormat( function( d, i ) {
-          return d;
+          return parseFloat( d ).toFixed( 2 );
         })
         .ticks( 7 )
         .orient( 'left' );
@@ -246,8 +248,24 @@ var internals = {
     },
 
     setScale: function( props ) {
-      props.axis.domain( props.domain )
+      props.axis.domain( props.domain ).nice()
         .range( props.range );
+
+      console.log( 'domain:', props.axis, props.axis.domain(), props.axis.ticks() );
+
+      this.adjustYAxisValues( props.axis.domain() );
+    },
+
+    adjustYAxisValues: function( extent ) {
+      var blockSize = Math.abs( extent[ 0 ] - extent[ 1 ] ) / 6;
+      var blocks = [];
+      for ( var i = 1; i < 7; i++ ) {
+        blocks.push( blockSize * i );
+      }
+
+      console.log( 'blocks:', [ extent[ 0 ] ].concat( blocks ) );
+
+      return blocks;
     },
 
     setLine: function( props ) {
