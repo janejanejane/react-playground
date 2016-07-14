@@ -117,7 +117,7 @@ var internals = {
         // set the domain and range for the y-axis
         this.setScale({
           axis: this.y,
-          domain: d3.extent( d3.merge( this.data ).filter( function( i ) { return typeof i === 'number'; } ) ),
+          domain: this.adjustExtent( d3.extent( d3.merge( this.data ).filter( function( i ) { return typeof i === 'number'; } ) ) ),
           range: [ this.graphYRange, 0 ]
         });
 
@@ -256,14 +256,20 @@ var internals = {
       this.adjustYAxisValues( props.axis.domain() );
     },
 
+    adjustExtent: function( extent ) {
+      var min = Math.floor( extent[ 0 ] ), max = Math.ceil( extent[ 1 ] );
+
+      return [ min, max ];
+    },
+
     adjustYAxisValues: function( extent ) {
       var blockSize = Math.abs( extent[ 0 ] - extent[ 1 ] ) / 6;
       var blocks = [];
-      for ( var i = 1; i < 7; i++ ) {
-        blocks.push( blockSize * i );
+      for ( var i = 1; i < 6; i++ ) {
+        blocks.push( extent[ 0 ] + blockSize * i );
       }
 
-      console.log( 'blocks:', [ extent[ 0 ] ].concat( blocks ) );
+      console.log( 'blocks:', [ extent[ 0 ] ].concat( blocks ).concat( [ extent[ 1 ] ] ) );
 
       return blocks;
     },
