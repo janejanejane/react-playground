@@ -244,7 +244,7 @@
         .append( 'g' )
           .append( 'circle' )
           .attr( 'cx', x( props.initialPosition + xAxisSpace ) )
-          .attr( 'cy', y( props.data[ props.initialPosition ] + 10 ) )
+          .attr( 'cy', y( props.data[ props.initialPosition ] ) )
           .attr( 'r', circleRadius )
           .attr( 'class', props.className + props.dataset );
     }

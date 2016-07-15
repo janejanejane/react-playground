@@ -296,7 +296,7 @@ var internals = {
         .append( 'g' )
           .append( 'circle' )
           .attr( 'cx', this.x( props.initialPosition + xAxisSpace ) )
-          .attr( 'cy', this.y( props.data[ props.initialPosition ] + 10 ) )
+          .attr( 'cy', this.y( props.data[ props.initialPosition ] ) )
           .attr( 'r', circleRadius )
           .attr( 'class', props.className + props.dataset );
     },
