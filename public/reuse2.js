@@ -48,6 +48,14 @@
       });
     }
 
+    self.xBottom = function( value ) {
+      if ( !arguments.length ) {
+        return lineInternals.xBottom;
+      }
+
+      lineInternals.xBottom = value;
+      return self;
+    };
 
     return d3.rebind( self, dispatch, 'on' );
   }
@@ -314,6 +322,8 @@ var reuseData = [
   [ 'data1', 12, 34, 56, 78, 91, 23, -45 ],
   [ 'data2', 89, 54, 46, 76, 48 ]
 ];
+
+reuse.xBottom( [ 1,2,3,4,5,6,7,8,9,10 ] );
 
 console.log( reuse );
 
