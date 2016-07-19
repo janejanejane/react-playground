@@ -67,13 +67,16 @@ var internals = {
     data: null,
     graphXRange: null,
     graphYRange: null,
-    line: d3.svg.line().interpolate( 'linear' ),
+    lineLeft: d3.svg.line().interpolate( 'linear' ),
+    lineRight: d3.svg.line().interpolate( 'linear' ),
     svg: null,
     x: d3.scale.linear(),
     xAxis: d3.svg.axis(),
     xBottom: [ '1', '2', '3', '4', '5', '6', '7' ],
-    y: d3.scale.linear(),
-    yAxis: d3.svg.axis(),
+    y0: d3.scale.linear(),
+    y1: d3.scale.linear(),
+    yAxisLeft: d3.svg.axis(),
+    yAxisRight: d3.svg.axis(),
 
     buildSVG: function( container ) {
       // if ( !svg ) {
@@ -99,7 +102,8 @@ var internals = {
         wrapper.append( 'g' ).attr( 'class', 'x axis' );
 
         // y-axis group element
-        wrapper.append( 'g' ).attr( 'class', 'y axis' );
+        wrapper.append( 'g' ).attr( 'class', 'y y-left axis' );
+        wrapper.append( 'g' ).attr( 'class', 'y y-right axis' );
 
         // background rects to enable column colors
         wrapper.append( 'g' ).attr( 'class', 'columns');
@@ -124,11 +128,17 @@ var internals = {
 
         // set the domain and range for the y-axis
         this.setScale({
-          axis: this.y,
+          axis: this.y0,
           domain: this.adjustExtent( d3.extent( d3.merge( this.data ).filter( function( i ) { return typeof i === 'number'; } ) ) ),
           range: [ this.graphYRange, 0 ]
         });
 
+        // set the domain and range for the y-axis
+        this.setScale({
+          axis: this.y1,
+          domain: this.adjustExtent( d3.extent( d3.merge( this.data ).filter( function( i ) { return typeof i === 'number'; } ) ) ),
+          range: [ this.graphYRange, 0 ]
+        });
         console.log( 'this.data:', this.data );
     },
 
@@ -144,24 +154,41 @@ var internals = {
         })
         .orient( 'bottom' );
 
-      this.yAxis.scale( this.y )
-        .tickValues( this.adjustYAxisValues( this.y.domain() ) )
+      this.yAxisLeft.scale( this.y0 )
+        .tickValues( this.adjustYAxisValues( this.y0.domain() ) )
         .tickFormat( function( d, i ) {
           return parseFloat( d ).toFixed( 2 );
         })
         .ticks( 7 )
         .orient( 'left' );
+
+      this.yAxisRight.scale( this.y1 )
+        .tickValues( this.adjustYAxisValues( this.y1.domain() ) )
+        .tickFormat( function( d, i ) {
+          return parseFloat( d ).toFixed( 2 );
+        })
+        .ticks( 7 )
+        .orient( 'right' );
     },
 
     buildLine: function() {
       var that = this;
 
       // define the line
-      this.line.x( function( d, i ) {
+      this.lineLeft.x( function( d, i ) {
           return that.x( i + xAxisSpace );
         })
         .y( function( d, i ) {
-          return that.y( d );
+          return that.y0( d );
+        });
+
+
+      // define the line
+      this.lineRight.x( function( d, i ) {
+          return that.x( i + xAxisSpace );
+        })
+        .y( function( d, i ) {
+          return that.y1( d );
         });
     },
 
@@ -172,7 +199,7 @@ var internals = {
         .style( 'fill', axisColor )
         .call( this.xAxis );
 
-      wrapper.select( '.y.axis' )
+      wrapper.select( '.y.y-left.axis' )
         .style( 'fill', axisColor )
         .call( this.yAxis );
     },
@@ -250,6 +277,7 @@ var internals = {
         var record = this.data[ val ];
         this.setLine( {
           data: record.slice( 1 ),
+          dataset: val,
           className: record[ 0 ]
         } );
       }
@@ -283,20 +311,34 @@ var internals = {
     },
 
     setLine: function( props ) {
+
+      var line = this.lineLeft( props.data );
+
+      if ( +props.dataset === 1 ) {
+        line = this.lineRight( props.data );
+      }
+
       this.svg.select( '.lines' )
         .append( 'path' )
           .datum( props.data )
-          .attr( 'd', this.line( props.data ) )
+          .attr( 'd', line )
           .attr( 'class', props.className )
           .style( 'fill', 'transparent' );
     },
 
     setCircle: function( props ) {
+
+      var cy = this.y0( props.data[ props.initialPosition ] );
+
+      if ( +props.dataset === 1 ) {
+        cy = this.y1( props.data[ props.initialPosition ] );
+      }
+
       this.svg.select( '.circles' )
         .append( 'g' )
           .append( 'circle' )
           .attr( 'cx', this.x( props.initialPosition + xAxisSpace ) )
-          .attr( 'cy', this.y( props.data[ props.initialPosition ] ) )
+          .attr( 'cy', cy )
           .attr( 'r', circleRadius )
           .attr( 'class', props.className + props.dataset );
     },
