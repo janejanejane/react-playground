@@ -201,7 +201,12 @@ var internals = {
 
       wrapper.select( '.y.y-left.axis' )
         .style( 'fill', axisColor )
-        .call( this.yAxis );
+        .call( this.yAxisLeft );
+
+
+      wrapper.select( '.y.y-right.axis' )
+        .style( 'fill', axisColor )
+        .call( this.yAxisRight );
     },
 
     drawBars: function() {
