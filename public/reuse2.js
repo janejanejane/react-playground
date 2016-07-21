@@ -206,7 +206,8 @@ var internals = {
 
       wrapper.select( '.y.y-right.axis' )
         .style( 'fill', axisColor )
-        .call( this.yAxisRight );
+        .call( this.yAxisRight )
+        .call( this.customYAxisRight.bind( this ) );
     },
 
     drawBars: function() {
@@ -346,6 +347,34 @@ var internals = {
           .attr( 'cy', cy )
           .attr( 'r', circleRadius )
           .attr( 'class', props.className + props.dataset );
+    },
+
+    customYAxisRight: function( g ) {
+      var that = this;
+
+      g.selectAll( 'line' )
+        .attr( 'x2', function( d, i ) {
+          console.log( 'LOOK!', that.graphXRange, innerAxisLength );
+          if ( i % tickInterval !== 0 ) {
+            return that.graphXRange + innerAxisLength;
+          }
+
+          return that.graphXRange;
+        })
+
+      g.selectAll( 'text' )
+        .attr( 'dy', function( d, i ) {
+
+          if ( i % tickInterval === 0 ) {
+            return i;
+          }
+
+          d3.select( this ).remove();
+        })
+        .attr( 'dx', function( d, i ) {
+
+        	return that.graphXRange;
+        })
     },
 
     mouseOver: function( container ) {
