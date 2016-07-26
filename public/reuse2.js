@@ -197,7 +197,8 @@ var internals = {
       wrapper.select( '.x.axis' )
         .attr( 'transform', 'translate( 0, ' + this.graphYRange + ')' )
         .style( 'fill', axisColor )
-        .call( this.xAxis );
+        .call( this.xAxis )
+        .call( this.customXAxis.bind( this ) );
 
       wrapper.select( '.y.y-left.axis' )
         .style( 'fill', axisColor )
@@ -347,6 +348,12 @@ var internals = {
           .attr( 'cy', cy )
           .attr( 'r', circleRadius )
           .attr( 'class', props.className + props.dataset );
+    },
+
+    customXAxis: function( g ) {
+      g.selectAll( 'text' )
+        .attr( 'dx', ( this.graphXRange / this.xBottom.length ) / 2 )
+        .attr( 'dy', 10 );
     },
 
     customYAxisRight: function( g ) {
