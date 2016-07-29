@@ -139,7 +139,6 @@ var internals = {
           domain: this.adjustExtent( d3.extent( d3.merge( this.data ).filter( function( i ) { return typeof i === 'number'; } ) ) ),
           range: [ this.graphYRange, 0 ]
         });
-        console.log( 'this.data:', this.data );
     },
 
     buildAxis: function() {
@@ -294,8 +293,6 @@ var internals = {
       props.axis.domain( props.domain ).nice()
         .range( props.range );
 
-      console.log( 'domain:', props.axis, props.axis.domain(), props.axis.ticks() );
-
       this.adjustYAxisValues( props.axis.domain() );
     },
 
@@ -311,8 +308,6 @@ var internals = {
       for ( var i = 1; i < 6; i++ ) {
         blocks.push( extent[ 0 ] + blockSize * i );
       }
-
-      console.log( 'blocks:', [ extent[ 0 ] ].concat( blocks ).concat( [ extent[ 1 ] ] ) );
 
       return blocks;
     },
@@ -361,7 +356,6 @@ var internals = {
 
       g.selectAll( 'line' )
         .attr( 'x2', function( d, i ) {
-          console.log( 'LOOK!', that.graphXRange, innerAxisLength );
           if ( i % tickInterval !== 0 ) {
             return that.graphXRange + innerAxisLength;
           }
@@ -385,11 +379,9 @@ var internals = {
     },
 
     mouseOver: function( container ) {
-      console.log( 'here?', container );
       var that = this;
 
       return function( d, i ) {
-        console.log( 'mouseover!!!' );
 
         that.dispatch.mouseoverOutside( d, i );
       }
@@ -408,7 +400,6 @@ var reuseData = [
 
 reuse.xBottom( [ 1,2,3,4,5,6,7,8,9,10 ] );
 
-console.log( reuse );
 
 d3.select(  '#reuser'  )
   .datum( reuseData )
