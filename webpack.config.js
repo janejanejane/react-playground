@@ -5,7 +5,18 @@ var path = require( 'path' );
 module.exports = {
   context: path.join( __dirname, 'src' ),
   devtool: debug ? 'inline-sourcemap' : null,
-  entry: './js/index.js',
+  entry: {
+    entry1: [
+      'webpack-dev-server/client?http://0.0.0.0:8080',
+      'webpack/hot/only-dev-server',
+      './js/index1.js'
+    ],
+    entry2: [
+      'webpack-dev-server/client?http://0.0.0.0:8080',
+      'webpack/hot/only-dev-server',
+      './js/index2.js'
+    ]
+  },
   module: {
     loaders: [
       {
@@ -24,7 +35,7 @@ module.exports = {
   },
   output: {
     path: path.join( __dirname, 'public' ),
-    filename: 'bundle.min.js'
+    filename: '[name].bundle.min.js'
   },
   plugins: debug ? [] : [
     new webpack.optimize.DedupePlugin(),
