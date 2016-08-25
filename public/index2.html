@@ -135,11 +135,11 @@
       stroke: white;
       }
 
-      .patterned-stripey { fill: url(#stripey); }
+      .striped { fill: url(#stripey); }
       #stripey rect { stroke: none; fill: #ff7f0e; }
       #stripey path { stroke: #636363; }
 
-      .state-patterned-stripey { fill: url(/#stripey); }
+      .state-striped { fill: url(/#stripey); }
     </style>
 <head>
 <body>
@@ -195,19 +195,19 @@
       //
       // var foreground2 = svg.append( 'path' )
       //   .datum( { endAngle: ( data / 100 ) * tau } )
-      //   .attr( 'class', 'foreground-arc2 patterned-stripey')
+      //   .attr( 'class', 'foreground-arc2 striped')
       //   .attr( 'd', pieArc );
 
       pieDiv = svg.selectAll( 'g.pieArc' )
-        .data( pie( data ) );
+        .data( pie( dataPie ) );
 
       pieDiv.enter().append( 'g' )
-        .attr( 'class', 'foreground2' )
-        .attr( 'transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
+        .attr( 'class', 'arc' )
+        // .attr( 'transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
 
       pieDiv.append( 'path' )
-        .attr( 'class', 'patterned-stripey' )
-        .attr( 'd', pie )
+        .attr( 'class', 'striped' )
+        .attr( 'd', arc )
         .attr( 'fill-opacity', '0.7' );
 
       svg.append( 'text' )
@@ -223,8 +223,8 @@
       var stripe = defs.append('pattern').attr({
         'id': 'stripey',
         'patternUnits': 'userSpaceOnUse',
-        'width': width,
-        'height': height
+        'width': patternSize,
+        'height': patternSize
       }).append('g');
 
       stripe.append('rect').attr({
